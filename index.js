@@ -46,6 +46,7 @@ async function run() {
       const database = client.db('nicheproductsdb');
       const packageCollection = database.collection('watchs');
       const usersCollection = database.collection('users');
+      const orderCollection = database.collection('orderplace');
   
       // Get servise API
       app.get('/watchs',async(req,res)=>{
@@ -63,6 +64,21 @@ async function run() {
         }
         res.json({ admin: isAdmin });
     })
+
+        // Add Orders API
+        app.post('/orderplace', async (req, res) => {
+          const order = req.body;
+          const result = await orderCollection.insertOne(order);
+          res.json(result);
+      })
+      app.post('/watchs', async (req, res) => {
+        const package = req.body;
+        console.log('hit the post api', package);
+  
+        const result = await packageCollection.insertOne(package);
+        console.log(result);
+        res.json(result)
+    });
 
       app.post('/users',async(req,res)=>{
         const user = req.body;
