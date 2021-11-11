@@ -9,8 +9,7 @@ const admin = require("firebase-admin");
 const port = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(express.json());
-// 
+app.use(express.json()); 
 
 
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
@@ -56,10 +55,18 @@ async function run() {
           const packages = await cursor.toArray();
           res.send(packages);
       })
+      
       app.get('/orderplace',async(req,res)=>{
           const cursor = orderCollection.find({});
           const allorder = await cursor.toArray();
           res.send(allorder);
+      })
+      app.get('/orderplace',verifyToken,async(req,res)=>{
+        const email = req.query.email
+        const query = { email: email }
+          const cursor = orderCollection.find(query);
+          const myorder = await cursor.toArray();
+          res.send(myorder);
       })
       app.get('/reviews',async(req,res)=>{
           const cursor = reviewCollection.find({});
