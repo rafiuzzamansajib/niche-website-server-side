@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors');
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
+const  ObjectID = require('mongodb').ObjectId;
 const admin = require("firebase-admin");
 
 const port = process.env.PORT || 5000;
@@ -47,12 +48,23 @@ async function run() {
       const packageCollection = database.collection('watchs');
       const usersCollection = database.collection('users');
       const orderCollection = database.collection('orderplace');
+      const reviewCollection = database.collection('reviews');
   
       // Get servise API
       app.get('/watchs',async(req,res)=>{
           const cursor = packageCollection.find({});
           const packages = await cursor.toArray();
           res.send(packages);
+      })
+      app.get('/orderplace',async(req,res)=>{
+          const cursor = orderCollection.find({});
+          const allorder = await cursor.toArray();
+          res.send(allorder);
+      })
+      app.get('/reviews',async(req,res)=>{
+          const cursor = reviewCollection.find({});
+          const reviews = await cursor.toArray();
+          res.send(reviews);
       })
       app.get('/users/:email', async (req, res) => {
         const email = req.params.email;
@@ -71,14 +83,27 @@ async function run() {
           const result = await orderCollection.insertOne(order);
           res.json(result);
       })
+
+      // Review api
+        app.post('/reviews', async (req, res) => {
+          const review = req.body;
+          const result = await reviewCollection.insertOne(review);
+          res.json(result);
+      })
       app.post('/watchs', async (req, res) => {
         const package = req.body;
         console.log('hit the post api', package);
-  
         const result = await packageCollection.insertOne(package);
         console.log(result);
         res.json(result)
     });
+          // Delete ApI
+          app.delete('/watchs/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectID(id) };
+            const result = await packageCollection.deleteOne(query);
+            res.json(result);
+        })
 
       app.post('/users',async(req,res)=>{
         const user = req.body;
