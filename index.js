@@ -55,12 +55,13 @@ async function run() {
           const packages = await cursor.toArray();
           res.send(packages);
       })
-      
+      // get order place api
       app.get('/orderplace',async(req,res)=>{
           const cursor = orderCollection.find({});
           const allorder = await cursor.toArray();
           res.send(allorder);
       })
+      
       app.get('/orderplace',verifyToken,async(req,res)=>{
         const email = req.query.email
         const query = { email: email }
@@ -68,6 +69,7 @@ async function run() {
           const myorder = await cursor.toArray();
           res.send(myorder);
       })
+      // Get reviews api
       app.get('/reviews',async(req,res)=>{
           const cursor = reviewCollection.find({});
           const reviews = await cursor.toArray();
@@ -97,6 +99,7 @@ async function run() {
           const result = await reviewCollection.insertOne(review);
           res.json(result);
       })
+      // watch post api for add product
       app.post('/watchs', async (req, res) => {
         const package = req.body;
         console.log('hit the post api', package);
@@ -111,6 +114,8 @@ async function run() {
             const result = await packageCollection.deleteOne(query);
             res.json(result);
         })
+
+        // users and make addmin post put api
 
       app.post('/users',async(req,res)=>{
         const user = req.body;
