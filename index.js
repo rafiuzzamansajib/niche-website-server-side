@@ -114,12 +114,6 @@ async function run() {
             const result = await packageCollection.deleteOne(query);
             res.json(result);
         })
-          app.delete('/orderplace/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectID(id) };
-            const result = await orderCollection.deleteOne(query);
-            res.json(result);
-        })
 
         // users and make addmin post put api
 
