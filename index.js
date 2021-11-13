@@ -62,8 +62,8 @@ async function run() {
           res.send(allorder);
       })
       
-      app.get('/orderplace',verifyToken,async(req,res)=>{
-        const email = req.query.email
+      app.get('/orderplace/:email',async(req,res)=>{
+        const email = req.params.email
         const query = { email: email }
           const cursor = orderCollection.find(query);
           const myorder = await cursor.toArray();
@@ -112,6 +112,12 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectID(id) };
             const result = await packageCollection.deleteOne(query);
+            res.json(result);
+        })
+          app.delete('/orderplace/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectID(id) };
+            const result = await orderCollection.deleteOne(query);
             res.json(result);
         })
 
